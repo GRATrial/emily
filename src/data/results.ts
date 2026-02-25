@@ -385,9 +385,9 @@ export const RESULTS_Emily_Smith: SimResult[] = [
   {
     id: "emily29",
     platform: "Facebook",
-    displayName: "Emily Smith, 14, has been missing since February 11 ...",
-    snippet: "Emily Smith, 14, has been missing since February 11, 2026. If you have any information about her whereabouts, please contact local authorities immediately.",
-    urlLike: "Facebook · Jolivartha",
+    displayName: "Emily Smith - Photographer & Visual Storyteller",
+    snippet: "Emily Smith is a photographer and visual storyteller based in the Pacific Northwest. Follow her page for landscape photography, travel stories, and creative tips.",
+    urlLike: "Facebook · Emily Smith Photography",
     discoverability: "Low",
     footprint: "Absent",
     race: "White American",
