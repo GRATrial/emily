@@ -9,7 +9,7 @@ import {
   type SimResult
 } from './data/results';
 import { getRelatedSearches } from './data/relatedSearches';
-import { trackPageView, trackTabChange, trackPagination, trackSearch, trackResultClick, trackEvent, trackSessionEnd } from './utils/tracking';
+import { trackPageView, trackTabChange, trackPagination, trackSearch, trackResultClick, trackEvent, trackSessionEnd, type ProlificParams } from './utils/tracking';
 
 interface GoogleSimulationProps {
   searchType?: 'emily';
@@ -22,18 +22,24 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'emily
   const resultsPerPage = 10;
 
   const returnUrl = useMemo(() => new URLSearchParams(window.location.search).get('returnUrl') || 'https://gmu.az1.qualtrics.com/jfe/form/SV_dpetNtWS5RNFmMS', []);
+  // Capture Prolific parameters from URL
+  const prolificParams: ProlificParams = useMemo(() => ({
+    prolificPid: new URLSearchParams(window.location.search).get('PROLIFIC_PID') || undefined,
+    studyId: new URLSearchParams(window.location.search).get('STUDY_ID') || undefined,
+    sessionIdProlific: new URLSearchParams(window.location.search).get('SESSION_ID') || undefined,
+  }), []);
 
   const isDark = false;
 
   // Track page view on mount
   useEffect(() => {
-    trackPageView('emily', currentPage, activeTab);
+    trackPageView('emily', currentPage, activeTab, undefined, prolificParams);
   }, []);
 
   // Track session end on beforeunload
   useEffect(() => {
     const handleBeforeUnload = () => {
-      trackSessionEnd('emily', currentPage, activeTab);
+      trackSessionEnd('emily', currentPage, activeTab, undefined, prolificParams);
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
@@ -126,9 +132,15 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'emily
                 elementText: 'Done Searching',
                 persona: 'emily',
                 page: currentPage,
-                tab: activeTab
+                tab: activeTab,
+                ...prolificParams,
               });
-              window.location.href = returnUrl;
+              // Build return URL with Prolific params appended
+              const finalReturnUrl = new URL(returnUrl);
+              if (prolificParams.prolificPid) finalReturnUrl.searchParams.set('PROLIFIC_PID', prolificParams.prolificPid);
+              if (prolificParams.studyId) finalReturnUrl.searchParams.set('STUDY_ID', prolificParams.studyId);
+              if (prolificParams.sessionIdProlific) finalReturnUrl.searchParams.set('SESSION_ID', prolificParams.sessionIdProlific);
+              window.location.href = finalReturnUrl.toString();
             }}
             style={{
               backgroundColor: '#1a73e8',
@@ -178,7 +190,7 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'emily
                       <ResultCard
                         result={result}
                         onOpen={(result) => {
-                          trackResultClick(result.id, result.platform, result.displayName, 'emily');
+                          trackResultClick(result.id, result.platform, result.displayName, 'emily', undefined, prolificParams);
                           // Low-disc persona: no profile views open, just track the click
                         }}
                         isDark={isDark}
