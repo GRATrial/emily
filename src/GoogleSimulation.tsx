@@ -21,7 +21,7 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'emily
   const [currentPage, setCurrentPage] = useState(1);
   const resultsPerPage = 10;
 
-  const returnUrl = useMemo(() => new URLSearchParams(window.location.search).get('returnUrl') || 'https://gmu.az1.qualtrics.com/jfe/form/SV_dpetNtWS5RNFmMS', []);
+  const returnUrl = useMemo(() => new URLSearchParams(window.location.search).get('returnUrl') || 'https://gmusom.pdx1.qualtrics.com/jfe/form/SV_b31xkRd4nrOoMBw', []);
   // Capture Prolific parameters from URL
   const prolificParams: ProlificParams = useMemo(() => ({
     prolificPid: new URLSearchParams(window.location.search).get('PROLIFIC_PID') || undefined,
