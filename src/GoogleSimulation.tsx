@@ -9,7 +9,7 @@ import {
   type SimResult
 } from './data/results';
 import { getRelatedSearches } from './data/relatedSearches';
-import { trackPageView, trackTabChange, trackPagination, trackSearch, trackResultClick, trackEvent, trackEventBeacon, trackSessionEnd, type ProlificParams } from './utils/tracking';
+import { trackPageView, trackTabChange, trackPagination, trackSearch, trackResultClick, setTrackingDefaults, trackEventBeacon, trackSessionEnd, type ProlificParams } from './utils/tracking';
 import { useEngagementTracking } from './utils/engagement';
 
 interface GoogleSimulationProps {
@@ -29,6 +29,8 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'emily
     studyId: new URLSearchParams(window.location.search).get('STUDY_ID') || undefined,
     sessionIdProlific: new URLSearchParams(window.location.search).get('SESSION_ID') || undefined,
   }), []);
+  // Let component-level tracking calls inherit the participant's attribution
+  setTrackingDefaults({ condition: undefined, ...prolificParams });
 
   const isDark = false;
 
