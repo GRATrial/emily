@@ -10,6 +10,7 @@ import {
 } from './data/results';
 import { getRelatedSearches } from './data/relatedSearches';
 import { trackPageView, trackTabChange, trackPagination, trackSearch, trackResultClick, trackEvent, trackSessionEnd, type ProlificParams } from './utils/tracking';
+import { useEngagementTracking } from './utils/engagement';
 
 interface GoogleSimulationProps {
   searchType?: 'emily';
@@ -44,6 +45,9 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'emily
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [currentPage, activeTab]);
+
+  // Scroll-depth milestones + tab visibility (see utils/engagement.ts)
+  useEngagementTracking('emily', currentPage, activeTab, undefined, prolificParams);
 
   // Reset to first page when activeTab changes
   useEffect(() => {
